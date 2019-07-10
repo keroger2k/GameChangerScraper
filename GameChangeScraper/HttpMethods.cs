@@ -6,7 +6,7 @@ using System.Text;
 
 namespace GameChangeScraper
 {
-    class HttpMethods
+    public class HttpMethods
     {
 
 
