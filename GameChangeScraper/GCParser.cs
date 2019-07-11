@@ -48,34 +48,45 @@ namespace GameChangeScraper
         public BoxScore ParseGameHTML(Game gameObj, string html)
         {
             var htmlDocument = new HtmlDocument();
-            var h1 = new HtmlDocument();
-            var h2 = new HtmlDocument();
             htmlDocument.LoadHtml(html);
 
-            var awayTeam = htmlDocument.DocumentNode.SelectNodes("//h5").ElementAt(0).InnerText;
-            var homeTeam = htmlDocument.DocumentNode.SelectNodes("//h5").ElementAt(1).InnerText;
+            var awayTeam = htmlDocument.DocumentNode.Descendants("h5").ElementAt(0).InnerText;
+            var homeTeam = htmlDocument.DocumentNode.Descendants("h5").ElementAt(1).InnerText;
 
             var bs = new BoxScore();
 
             bs.AwayTeam = awayTeam.Substring(0, awayTeam.Length - 10);
             bs.HomeTeam = homeTeam.Substring(0, homeTeam.Length - 10);
 
-            var awayHittingTable = htmlDocument.DocumentNode.SelectNodes("//table").ElementAt(0).CreateNavigator();
+            var awayHittingTable = htmlDocument.DocumentNode.Descendants("table").ElementAt(0);
             var homeHittingTable = htmlDocument.DocumentNode.SelectNodes("//table").ElementAt(1);
             var awayPitchingTable = htmlDocument.DocumentNode.SelectNodes("//table").ElementAt(2);
             var homePitchingTable = htmlDocument.DocumentNode.SelectNodes("//table").ElementAt(3);
 
-            foreach(var i in awayHittingTable.Select("//tr[contains(@class, 'playerRow')]").Current.Select("//td"))
+            var playerRows = awayHittingTable.Descendants("tr")
+                .Where(node => node.GetAttributeValue("class", "")
+                .Contains("playerRow"))
+                .ToList();
+            foreach (var row in playerRows)
             {
-                
-                Console.WriteLine(i.ToString());
+                var tds = row.Descendants("td");
+                bs.BoxLines.Add(new BoxLine
+                {
+                    Name = tds.ElementAt(0).InnerText.Trim(),
+                    AB = Int32.Parse(tds.ElementAt(1).InnerText.Trim()),
+                    R = Int32.Parse(tds.ElementAt(2).InnerText.Trim()),
+                    H = Int32.Parse(tds.ElementAt(3).InnerText.Trim()),
+                    RBI = Int32.Parse(tds.ElementAt(4).InnerText.Trim()),
+                    BB = Int32.Parse(tds.ElementAt(5).InnerText.Trim()),
+                    SO = Int32.Parse(tds.ElementAt(6).InnerText.Trim()),
+                });
             }
 
 
             //var battingHTML = stats.First();
             //var pitchingHTML = stats.Last();
 
-            return bs;
+                return bs;
         }
     }
 }
