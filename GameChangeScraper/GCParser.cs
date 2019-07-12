@@ -63,30 +63,96 @@ namespace GameChangeScraper
             var awayPitchingTable = htmlDocument.DocumentNode.SelectNodes("//table").ElementAt(2);
             var homePitchingTable = htmlDocument.DocumentNode.SelectNodes("//table").ElementAt(3);
 
-            var playerRows = awayHittingTable.Descendants("tr")
-                .Where(node => node.GetAttributeValue("class", "")
-                .Contains("playerRow"))
-                .ToList();
-            foreach (var row in playerRows)
+            try
             {
-                var tds = row.Descendants("td");
-                bs.BoxLines.Add(new BoxLine
+                var playerRows = awayHittingTable.Descendants("tr")
+                        .Where(node => node.GetAttributeValue("class", "")
+                        .Contains("playerRow"))
+                        .ToList();
+                foreach (var row in playerRows)
                 {
-                    Name = tds.ElementAt(0).InnerText.Trim(),
-                    AB = Int32.Parse(tds.ElementAt(1).InnerText.Trim()),
-                    R = Int32.Parse(tds.ElementAt(2).InnerText.Trim()),
-                    H = Int32.Parse(tds.ElementAt(3).InnerText.Trim()),
-                    RBI = Int32.Parse(tds.ElementAt(4).InnerText.Trim()),
-                    BB = Int32.Parse(tds.ElementAt(5).InnerText.Trim()),
-                    SO = Int32.Parse(tds.ElementAt(6).InnerText.Trim()),
-                });
+                    var tds = row.Descendants("td");
+                    bs.AwayHittingBoxLines.Add(new HittingBoxLine
+                    {
+                        Name = tds.ElementAt(0).InnerText.Trim(),
+                        AB = Int32.Parse(tds.ElementAt(1).InnerText.Trim()),
+                        R = Int32.Parse(tds.ElementAt(2).InnerText.Trim()),
+                        H = Int32.Parse(tds.ElementAt(3).InnerText.Trim()),
+                        RBI = Int32.Parse(tds.ElementAt(4).InnerText.Trim()),
+                        BB = Int32.Parse(tds.ElementAt(5).InnerText.Trim()),
+                        SO = Int32.Parse(tds.ElementAt(6).InnerText.Trim()),
+                    });
+                }
+
+                playerRows = homeHittingTable.Descendants("tr")
+                    .Where(node => node.GetAttributeValue("class", "")
+                    .Contains("playerRow"))
+                    .ToList();
+                foreach (var row in playerRows)
+                {
+                    var tds = row.Descendants("td");
+                    bs.HomeHittingBoxLines.Add(new HittingBoxLine
+                    {
+                        Name = tds.ElementAt(0).InnerText.Trim(),
+                        AB = Int32.Parse(tds.ElementAt(1).InnerText.Trim()),
+                        R = Int32.Parse(tds.ElementAt(2).InnerText.Trim()),
+                        H = Int32.Parse(tds.ElementAt(3).InnerText.Trim()),
+                        RBI = Int32.Parse(tds.ElementAt(4).InnerText.Trim()),
+                        BB = Int32.Parse(tds.ElementAt(5).InnerText.Trim()),
+                        SO = Int32.Parse(tds.ElementAt(6).InnerText.Trim()),
+                    });
+                }
+
+                playerRows = awayPitchingTable.Descendants("tr")
+                    .Where(node => node.GetAttributeValue("class", "")
+                    .Contains("playerRow"))
+                    .ToList();
+                foreach (var row in playerRows)
+                {
+                    var tds = row.Descendants("td");
+                    bs.AwayPitchingBoxLines.Add(new PitchingBoxLine
+                    {
+                        Name = tds.ElementAt(0).InnerText.Trim(),
+                        IP = float.Parse(tds.ElementAt(1).InnerText.Trim()),
+                        NumberPitches = int.Parse(tds.ElementAt(2).InnerText.Trim()),
+                        StikePercent = float.Parse(tds.ElementAt(3).InnerText.Trim()),
+                        H = Int32.Parse(tds.ElementAt(4).InnerText.Trim()),
+                        R = Int32.Parse(tds.ElementAt(5).InnerText.Trim()),
+                        ER = Int32.Parse(tds.ElementAt(6).InnerText.Trim()),
+                        SO = Int32.Parse(tds.ElementAt(7).InnerText.Trim()),
+                        BB = Int32.Parse(tds.ElementAt(8).InnerText.Trim()),
+                        HR = Int32.Parse(tds.ElementAt(9).InnerText.Trim()),
+                    });
+                }
+
+                playerRows = homePitchingTable.Descendants("tr")
+                    .Where(node => node.GetAttributeValue("class", "")
+                    .Contains("playerRow"))
+                    .ToList();
+                foreach (var row in playerRows)
+                {
+                    var tds = row.Descendants("td");
+                    bs.HomePitchingBoxLines.Add(new PitchingBoxLine
+                    {
+                        Name = tds.ElementAt(0).InnerText.Trim(),
+                        IP = float.Parse(tds.ElementAt(1).InnerText.Trim()),
+                        NumberPitches = int.Parse(tds.ElementAt(2).InnerText.Trim()),
+                        StikePercent = float.Parse(tds.ElementAt(3).InnerText.Trim()),
+                        H = Int32.Parse(tds.ElementAt(4).InnerText.Trim()),
+                        R = Int32.Parse(tds.ElementAt(5).InnerText.Trim()),
+                        ER = Int32.Parse(tds.ElementAt(6).InnerText.Trim()),
+                        SO = Int32.Parse(tds.ElementAt(7).InnerText.Trim()),
+                        BB = Int32.Parse(tds.ElementAt(8).InnerText.Trim()),
+                        HR = Int32.Parse(tds.ElementAt(9).InnerText.Trim()),
+                    });
+                }
+            }
+            catch (Exception)
+            {
+
             }
 
-
-            //var battingHTML = stats.First();
-            //var pitchingHTML = stats.Last();
-
-                return bs;
+            return bs;
         }
     }
 }
