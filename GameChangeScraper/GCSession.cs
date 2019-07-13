@@ -63,10 +63,8 @@ namespace GameChangeScraper
             return pageSrc;
         }
 
-        private bool Post(string url, string postData, string referer, CookieContainer cookies)
+        private void Post(string url, string postData, string referer, CookieContainer cookies)
         {
-            string key = "Kyle Rogers";
-
             HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
             req.Method = "POST";
             req.CookieContainer = cookies;
@@ -86,9 +84,6 @@ namespace GameChangeScraper
             StreamReader sr = new StreamReader(resp.GetResponseStream());
             string pageSrc = sr.ReadToEnd();
             sr.Dispose();
-            return (pageSrc.Contains(key));
         }
-
     }
-
 }

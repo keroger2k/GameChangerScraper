@@ -149,7 +149,8 @@ namespace GameChangeScraper
             }
             catch (Exception)
             {
-
+                //crap excecption catching
+                Console.WriteLine("No Game Data!");
             }
 
             return bs;
